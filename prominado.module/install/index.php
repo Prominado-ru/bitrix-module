@@ -32,23 +32,31 @@ class prominado_module extends CModule
 
     function DoInstall()
     {
-		$eventManager = \Bitrix\Main\EventManager::getInstance();
-		$eventManager->registerEventHandler("main", "OnBuildGlobalMenu", $this->MODULE_ID, "\\Prominado\\Module\\Core", "onGlobalMenu");
-		
+		$this->InstallEvents();
 		RegisterModule($this->MODULE_ID);
         CAdminMessage::ShowNote(Loc::getMessage("PROMINADO_MODULE_MODULE_INSTALLED"));
 
         return true;
     }
-
-    function DoUninstall()
-    {
+    
+    function InstallEvents()
+	{
 		$eventManager = \Bitrix\Main\EventManager::getInstance();
-		$eventManager->unRegisterEventHandler("main", "OnBuildGlobalMenu", $this->MODULE_ID, "\\Prominado\\Module\\Core", "onGlobalMenu");
-		
+		$eventManager->registerEventHandler("main", "OnBuildGlobalMenu", $this->MODULE_ID, "\\Prominado\\Module\\Core", "onGlobalMenu");
+	}
+	
+	function DoUninstall()
+    {
+		$this->UnInstallEvents();
         UnRegisterModule($this->MODULE_ID);
 		CAdminMessage::ShowNote(Loc::getMessage("PROMINADO_MODULE_MODULE_UNINSTALLED"));
         return true;
     }
+	
+	function UnInstallEvents()
+	{
+		$eventManager = \Bitrix\Main\EventManager::getInstance();
+		$eventManager->unRegisterEventHandler("main", "OnBuildGlobalMenu", $this->MODULE_ID, "\\Prominado\\Module\\Core", "onGlobalMenu");
+	}
 }
 ?>
