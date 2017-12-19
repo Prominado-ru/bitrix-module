@@ -4,8 +4,8 @@ namespace Prominado\Module;
 
 class Core
 {
-	function onGlobalMenu(&$menu)
-	{
-		return $menu;
-	}
+    function onGlobalMenu(&$menu)
+    {
+        return $menu;
+    }
 }
