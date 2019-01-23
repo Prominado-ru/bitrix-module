@@ -1,8 +1,9 @@
-<?
+<?php
 
-use \Bitrix\Main\Localization\Loc;
+use Bitrix\Main\Localization\Loc;
+use Bitrix\Main\ModuleManager;
 
-class prominado_module extends CModule
+class prominado_module extends \CModule
 {
     var $MODULE_ID = 'prominado.module';
     var $MODULE_VERSION;
@@ -15,7 +16,7 @@ class prominado_module extends CModule
 
     function prominado_module()
     {
-        $arModuleVersion = array();
+        $arModuleVersion = [];
         include __DIR__ . '/version.php';
         if (is_array($arModuleVersion) && array_key_exists('VERSION', $arModuleVersion)) {
             $this->MODULE_VERSION = $arModuleVersion['VERSION'];
@@ -29,32 +30,33 @@ class prominado_module extends CModule
 
     function DoInstall()
     {
-		$this->InstallEvents();
-		RegisterModule($this->MODULE_ID);
-        CAdminMessage::ShowNote(Loc::getMessage('PROMINADO_MODULE_MODULE_INSTALLED'));
+        $this->InstallEvents();
+
+        ModuleManager::registerModule($this->MODULE_ID);
 
         return true;
     }
-    
+
     function InstallEvents()
-	{
-		$eventManager = \Bitrix\Main\EventManager::getInstance();
-        $eventManager->registerEventHandler('main', 'OnBuildGlobalMenu', $this->MODULE_ID, '\\Prominado\\Module\\Core',
-            'onGlobalMenu');
-	}
-	
-	function DoUninstall()
     {
-		$this->UnInstallEvents();
-        UnRegisterModule($this->MODULE_ID);
-        CAdminMessage::ShowNote(Loc::getMessage('PROMINADO_MODULE_MODULE_UNINSTALLED'));
+        $eventManager = \Bitrix\Main\EventManager::getInstance();
+        $eventManager->registerEventHandler('main', 'OnBuildGlobalMenu', $this->MODULE_ID,
+            '\\Prominado\\Module\\Core', 'onGlobalMenu');
+    }
+
+    function DoUninstall()
+    {
+        $this->UnInstallEvents();
+
+        ModuleManager::unRegisterModule($this->MODULE_ID);
+
         return true;
     }
-	
-	function UnInstallEvents()
-	{
-		$eventManager = \Bitrix\Main\EventManager::getInstance();
+
+    function UnInstallEvents()
+    {
+        $eventManager = \Bitrix\Main\EventManager::getInstance();
         $eventManager->unRegisterEventHandler('main', 'OnBuildGlobalMenu', $this->MODULE_ID,
             '\\Prominado\\Module\\Core', 'onGlobalMenu');
-	}
+    }
 }
